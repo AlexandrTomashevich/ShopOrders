@@ -21,20 +21,18 @@ type Product struct {
 }
 
 func main() {
-	// Чтение входных номеров заказов из аргументов командной строки
+
 	args := os.Args[1:]
 	orderNumbers := strings.Join(args, ",")
 	fmt.Println("Страница сборки заказов", orderNumbers)
 	fmt.Println("=+=+=+=")
 
-	// Подключение к базе данных
 	db, err := db.ConnectDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	// Выполнение запроса и обработка результатов
 	query := fmt.Sprintf(`SELECT shelf_name, product_name, product_id, order_id, product_count, additional_shelves FROM GetSummaryWithShelves(ARRAY[%s]);`, orderNumbers)
 	rows, err := db.Query(query)
 	if err != nil {
@@ -56,7 +54,6 @@ func main() {
 		products = append(products, product)
 	}
 
-	// Сортируем элементы по стеллажам и ID продукта
 	sort.SliceStable(products, func(i, j int) bool {
 		if products[i].ShelfName != products[j].ShelfName {
 			return products[i].ShelfName < products[j].ShelfName
@@ -81,7 +78,6 @@ func main() {
 
 		fmt.Printf("%s (id=%d)\norder %d, %d шт\n", productName, productID, orderID, productCount)
 
-		// Проверяем, есть ли информация о дополнительных стеллажах
 		if productID != 1 && productID != 2 && productID != 4 && productID != 6 {
 			fmt.Printf("доп стеллаж: %s", additionalShelves)
 		}
