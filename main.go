@@ -50,7 +50,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		product.AdditionalShelves = additionalShelves.String // Заменяем NULL на пустую строку, если не NULL
+		product.AdditionalShelves = additionalShelves.String
 		products = append(products, product)
 	}
 
